@@ -30,35 +30,6 @@ treated_df["lap"] = df["lap_number"]
 treated_df["best_lap_time"] = df["best_lap_time"]
 treated_df["current_lap_time"] = df["current_lap_time"]
 
+# treated_df["changed_gear"] = df["gear"]
+
 treated_df.to_csv("./data/treated-datasheet.csv")
-
-
-# 'Unnamed: 0', 'since_last_ns', 'timestamp_ms', 'current_engine_rpm',
-# 'wheel_rotation_speed_front_left', 'wheel_rotation_speed_front_right',
-# 'wheel_rotation_speed_rear_left', 'wheel_rotation_speed_rear_right',
-# 'wheel_on_rumble_strip_front_left', 'wheel_on_rumble_strip_front_right',
-# 'wheel_on_rumble_strip_rear_left', 'wheel_on_rumble_strip_rear_right',
-# 'wheel_in_puddle_depth_front_left', 'wheel_in_puddle_depth_front_right',
-# 'wheel_in_puddle_depth_rear_left', 'wheel_in_puddle_depth_rear_right',
-# 'tire_slip_rotation_front_left', 'tire_slip_rotation_front_right',
-# 'tire_slip_rotation_rear_left', 'tire_slip_rotation_rear_right',
-# 'tire_slip_angle_front_left', 'tire_slip_angle_front_right',
-# 'tire_slip_angle_rear_left', 'tire_slip_angle_rear_right',
-# 'tire_combined_slip_front_left', 'tire_combined_slip_front_right',
-# 'tire_combined_slip_rear_left', 'tire_combined_slip_rear_right',
-# 'tire_temp_front_left', 'tire_temp_front_right', 'tire_temp_rear_left',
-# 'tire_temp_rear_right', 'normalized_suspension_travel_front_left',
-# 'normalized_suspension_travel_front_right',
-# 'normalized_suspension_travel_rear_left',
-# 'normalized_suspension_travel_rear_right',
-# 'suspension_travel_meters_front_left',
-# 'suspension_travel_meters_front_right',
-# 'suspension_travel_meters_rear_left',
-# 'suspension_travel_meters_rear_right', 'position_x', 'position_y',
-# 'position_z', 'acceleration_x', 'acceleration_y', 'acceleration_z',
-# 'velocity_x', 'velocity_y', 'velocity_z', 'angular_velocity_x',
-# 'angular_velocity_y', 'angular_velocity_z', 'yaw', 'pitch', 'roll',
-# 'speed', 'power', 'torque', 'boost', 'fuel', 'distance_traveled',
-# 'acceleration', 'brake', 'clutch', 'handbrake', 'gear', 'steer',
-# 'lap_number', 'best_lap_time', 'last_lap_time', 'current_lap_time',
-# 'current_race_time', 'race_position'
