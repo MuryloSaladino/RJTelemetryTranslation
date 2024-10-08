@@ -37,8 +37,6 @@ treated_df["Brake Pedal"] = df["brake"]
 # Add how much the acceleration is being pressed from 0 to 255
 treated_df["Acceleration Pedal"] = df["acceleration"]
 
-
-
 # Add whether the car ran over a strip
 treated_df["Ran over strip"] = df["wheel_on_rumble_strip_front_left"] | df["wheel_on_rumble_strip_front_right"] | df["wheel_on_rumble_strip_rear_left"] | df["wheel_on_rumble_strip_rear_right"]
 
@@ -81,4 +79,4 @@ def calculate_acceleration(row):
 
 treated_df["Acceleration(m/s²)"] = df.apply(calculate_acceleration, axis=1)
 
-treated_df.to_csv("./data/treated-datasheet.csv")
+treated_df.to_csv("./data/treated-datasheet.csv", decimal=",", sep=";")
