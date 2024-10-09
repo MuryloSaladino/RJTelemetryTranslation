@@ -82,7 +82,6 @@ treated_df["Acceleration(m/s²)"] = df.apply(calculate_acceleration, axis=1)
 # Add time in minutes
 treated_df["Time in minutes"] = treated_df["Timestamp(ms)"] / 60000
 
-
 # Add state to use as label in map
 conditions = [
     treated_df["Ran over strip"],
@@ -99,4 +98,6 @@ choices = [
 treated_df['Car Condition'] = np.select(conditions, choices, default='< 100 Km/h')
 
 
+
+# Write final CSV
 treated_df.to_csv("./data/treated-datasheet.csv", decimal=",", sep=";")
