@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 treated_df = pd.DataFrame()
 df = pd.read_csv("./data/telemetry-rio-5-laps.csv")
@@ -78,6 +79,24 @@ def calculate_acceleration(row):
 
 treated_df["Acceleration(m/s²)"] = df.apply(calculate_acceleration, axis=1)
 
+# Add time in minutes
 treated_df["Time in minutes"] = treated_df["Timestamp(ms)"] / 60000
+
+
+# Add state to use as label in map
+conditions = [
+    treated_df["Ran over strip"],
+    treated_df["Changed Gear"],
+    treated_df["Speed(Km/h)"] >= 200,
+    (treated_df["Speed(Km/h)"] >= 100) & (treated_df["Speed(Km/h)"] < 200),
+]
+choices = [
+    "Running over rumble strips",
+    "Changing gear",
+    "> 200 Km/h",
+    "> 100 Km/h",
+]
+treated_df['Car Condition'] = np.select(conditions, choices, default='< 100 Km/h')
+
 
 treated_df.to_csv("./data/treated-datasheet.csv", decimal=",", sep=";")
