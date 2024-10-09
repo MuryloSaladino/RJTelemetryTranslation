@@ -1,4 +1,3 @@
-import numpy as np
 import pandas as pd
 
 treated_df = pd.DataFrame()
@@ -46,8 +45,8 @@ treated_df["Lap"] = df["lap_number"]
 # Add the last lap time
 treated_df["Last lap time"] = df["last_lap_time"]
 
-# Add the current lap time
-treated_df["Current lap time"] = df["current_lap_time"]
+# Add the current lap time in minutes
+treated_df["Current lap time(min)"] = df["current_lap_time"] / 60
 
 # Add the current best lap time
 treated_df["Best lap time"] = df["best_lap_time"]
@@ -78,5 +77,7 @@ def calculate_acceleration(row):
     return (row["speed"] - row["previous_speed"]) / (row["timestamp_ms"] - row["previous_timestamp"]) * 1000
 
 treated_df["Acceleration(m/s²)"] = df.apply(calculate_acceleration, axis=1)
+
+treated_df["Time in minutes"] = treated_df["Timestamp(ms)"] / 60000
 
 treated_df.to_csv("./data/treated-datasheet.csv", decimal=",", sep=";")
