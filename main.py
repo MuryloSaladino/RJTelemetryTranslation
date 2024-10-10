@@ -25,6 +25,20 @@ treated_df["Speed(Km/h)"] = df["speed"] * 3.6
 # Add percentage of fuel left in the tank 
 treated_df["Fuel"] = df["fuel"]
 
+# Add percentage of fuel wasted for lap
+df["last_lap"] = df["lap_number"].shift(1);
+df["new_lap"] = df["lap_number"] != df["last_lap"]
+
+initial_fuel = 0.0
+df["lap_wasted_fuel"] = 0.0
+
+for i, row in df.iterrows():
+    if row["new_lap"]:
+        initial_fuel = row["fuel"]
+    df.at[i, "lap_wasted_fuel"] = initial_fuel - row["fuel"]
+
+treated_df["Wasted Fuel per Lap"] = df["lap_wasted_fuel"]
+
 # Add torque in Nm
 treated_df["Torque"] = df["torque"]
 
