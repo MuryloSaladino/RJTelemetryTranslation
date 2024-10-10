@@ -63,21 +63,8 @@ treated_df["Changed Gear"] = df["gear"] != df["previous_gear"]
 treated_df["Steering Wheel Movement"] = df["steer"]
 
 # Add car acceleration in m/s²
-df["previous_speed"] = df["speed"].shift(1);
-df["two_previous_speed"] = df["speed"].shift(2);
-df["previous_timestamp"] = df["timestamp_ms"].shift(1);
-df["two_previous_timestamp"] = df["timestamp_ms"].shift(2);
-
-def calculate_acceleration(row):
-    if row["timestamp_ms"] == row["previous_timestamp"]:
-        return None
-
-    if row["previous_timestamp"] == row["two_previous_timestamp"]:
-        return (row["speed"] - row["two_previous_speed"]) / (row["timestamp_ms"] - row["two_previous_timestamp"]) * 1000
-    
-    return (row["speed"] - row["previous_speed"]) / (row["timestamp_ms"] - row["previous_timestamp"]) * 1000
-
-treated_df["Acceleration(m/s²)"] = df.apply(calculate_acceleration, axis=1)
+df["previous_speed"] = df["speed"].shift(1)
+treated_df["Acceleration(m/s²)"] = (df["speed"] - df["previous_speed"]) / (df["since_last_ns"] / (10**9))
 
 # Add time in minutes
 treated_df["Time in minutes"] = treated_df["Timestamp(ms)"] / 60000
