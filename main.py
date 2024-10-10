@@ -70,7 +70,7 @@ df["two_previous_timestamp"] = df["timestamp_ms"].shift(2);
 
 def calculate_acceleration(row):
     if row["timestamp_ms"] == row["previous_timestamp"]:
-        return 0;
+        return None
 
     if row["previous_timestamp"] == row["two_previous_timestamp"]:
         return (row["speed"] - row["two_previous_speed"]) / (row["timestamp_ms"] - row["two_previous_timestamp"]) * 1000
@@ -97,7 +97,8 @@ choices = [
 ]
 treated_df['Car Condition'] = np.select(conditions, choices, default='< 100 Km/h')
 
-
+# Add Speed Range
+treated_df["Speed Range"] = (treated_df["Speed(Km/h)"] // 40) * 40
 
 # Write final CSV
 treated_df.to_csv("./data/treated-datasheet.csv", decimal=",", sep=";")
