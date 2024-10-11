@@ -80,8 +80,8 @@ treated_df["Changed Gear"] = df["gear"] != df["previous_gear"]
 treated_df["Steering Wheel Movement"] = df["steer"]
 
 # Add car acceleration in m/s²
-df["previous_speed"] = df["speed"].shift(1)
-treated_df["Acceleration(m/s²)"] = (df["speed"] - df["previous_speed"]) / (df["since_last_ns"] / (10**9))
+# df["previous_speed"] = df["speed"].shift(1)
+# treated_df["Acceleration(m/s²)"] = (df["speed"] - df["previous_speed"]) / (df["since_last_ns"] / (10**9))
 
 # Add time in minutes
 treated_df["Time in minutes"] = treated_df["Timestamp(ms)"] / 60000
@@ -103,6 +103,15 @@ treated_df['Car Condition'] = np.select(conditions, choices, default='< 100 Km/h
 
 # Add Speed Range
 treated_df["Speed Range"] = (treated_df["Speed(Km/h)"] // 40) * 40
+
+# Add car acceleration in m/s² V2
+treated_df['Race Time(s)'] = df['current_race_time'].apply(lambda x: int(x))
+treated_df["speed"] = df["speed"]
+df_per_second = treated_df.groupby('Race Time(s)').agg({'speed': 'mean'}).reset_index()
+df_per_second['Acceleration(m/s²)'] = df_per_second['speed'].diff()
+
+treated_df = pd.merge(treated_df, df_per_second[['Race Time(s)', 'Acceleration(m/s²)']], on='Race Time(s)', how='left')
+treated_df.fillna(0, inplace=True)
 
 # Write final CSV
 treated_df.to_csv("./data/treated-datasheet.csv", decimal=",", sep=";")
