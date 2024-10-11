@@ -26,7 +26,7 @@ treated_df["Speed(Km/h)"] = df["speed"] * 3.6
 treated_df["Fuel"] = df["fuel"]
 
 # Add percentage of fuel wasted for lap
-df["last_lap"] = df["lap_number"].shift(1);
+df["last_lap"] = df["lap_number"].shift(1)
 df["new_lap"] = df["lap_number"] != df["last_lap"]
 
 initial_fuel = 0.0
@@ -38,6 +38,18 @@ for i, row in df.iterrows():
     df.at[i, "lap_wasted_fuel"] = initial_fuel - row["fuel"]
 
 treated_df["Wasted Fuel per Lap"] = df["lap_wasted_fuel"]
+
+# Add the lap number starting in 0
+treated_df["Lap"] = df["lap_number"]
+
+# Add the last lap time
+treated_df["Last lap time"] = df["last_lap_time"]
+
+# Add the current lap time in minutes
+treated_df["Current lap time(min)"] = df["current_lap_time"] / 60
+
+# Add lap time
+treated_df["Lap Time(min)"] = treated_df.groupby("Lap")["Current lap time(min)"].transform("last")
 
 # Add torque in Nm
 treated_df["Torque"] = df["torque"]
@@ -53,15 +65,6 @@ treated_df["Acceleration Pedal"] = df["acceleration"]
 
 # Add whether the car ran over a strip
 treated_df["Ran over strip"] = df["wheel_on_rumble_strip_front_left"] | df["wheel_on_rumble_strip_front_right"] | df["wheel_on_rumble_strip_rear_left"] | df["wheel_on_rumble_strip_rear_right"]
-
-# Add the lap number starting in 0
-treated_df["Lap"] = df["lap_number"]
-
-# Add the last lap time
-treated_df["Last lap time"] = df["last_lap_time"]
-
-# Add the current lap time in minutes
-treated_df["Current lap time(min)"] = df["current_lap_time"] / 60
 
 # Add the current best lap time
 treated_df["Best lap time"] = df["best_lap_time"]
