@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import math
 
 treated_df = pd.DataFrame()
 df = pd.read_csv("./data/telemetry-rio-5-laps.csv")
@@ -10,14 +11,16 @@ treated_df["Timestamp(ms)"] = df["timestamp_ms"] - df["timestamp_ms"].iloc[0]
 # Add Revolutions Per Minute
 treated_df["RPM"] = df["current_engine_rpm"]
 
-# Add position in X
-treated_df["Position X"] = df["position_x"]
+# Add Coordinates
+theta = math.radians(30)
 
-# Add position in Y
-treated_df["Position Y"] = df["position_y"]
+treated_df["Position X"] = (df["position_x"] * math.cos(theta)) - (df["position_z"] * math.sin(theta))
+treated_df["Position Y"] = (df["position_x"] * math.sin(theta)) + (df["position_z"] * math.cos(theta))
+treated_df["Position Z"] = df["position_y"]
 
-# Add position in Z
-treated_df["Position Z"] = df["position_z"]
+# treated_df["Position X"] = df["position_x"]
+# treated_df["Position Y"] = df["position_z"]
+# treated_df["Position Z"] = df["position_y"]
 
 # Add speed in Km/h
 treated_df["Speed(Km/h)"] = df["speed"] * 3.6
@@ -109,6 +112,15 @@ df_per_second['Acceleration(m/s²)'] = df_per_second['speed'].diff()
 
 treated_df = pd.merge(treated_df, df_per_second[['Race Time(s)', 'Acceleration(m/s²)']], on='Race Time(s)', how='left')
 treated_df.fillna(0, inplace=True)
+
+# Add Pedal State
+conditions = [
+    df["brake"] > 126,
+    df["acceleration"] > 50
+]
+choices = ["Brake", "Gas"]
+
+treated_df["Pedal State"] = np.select(conditions, choices, default='None')
 
 # Write final CSV
 treated_df.to_csv("./data/treated-datasheet.csv", decimal=",", sep=";")
