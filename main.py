@@ -12,15 +12,15 @@ treated_df["Timestamp(ms)"] = df["timestamp_ms"] - df["timestamp_ms"].iloc[0]
 treated_df["RPM"] = df["current_engine_rpm"]
 
 # Add Coordinates
-theta = math.radians(30)
-
-treated_df["Position X"] = (df["position_x"] * math.cos(theta)) - (df["position_z"] * math.sin(theta))
-treated_df["Position Y"] = (df["position_x"] * math.sin(theta)) + (df["position_z"] * math.cos(theta))
-treated_df["Position Z"] = df["position_y"]
-
-# treated_df["Position X"] = df["position_x"]
-# treated_df["Position Y"] = df["position_z"]
+# Vertical Version:
+# theta = math.radians(30)
+# treated_df["Position X"] = (df["position_x"] * math.cos(theta)) - (df["position_z"] * math.sin(theta))
+# treated_df["Position Y"] = (df["position_x"] * math.sin(theta)) + (df["position_z"] * math.cos(theta))
 # treated_df["Position Z"] = df["position_y"]
+# Horizontal version:
+treated_df["Position X"] = df["position_x"]
+treated_df["Position Y"] = df["position_z"]
+treated_df["Position Z"] = df["position_y"]
 
 # Add speed in Km/h
 treated_df["Speed(Km/h)"] = df["speed"] * 3.6
@@ -124,6 +124,12 @@ conditions = [
 choices = ["Brake", "Gas"]
 
 treated_df["Pedal State"] = np.select(conditions, choices, default='None')
+
+# Add Wheel Rotation
+treated_df["Front-Left Wheel Rotation"] = df["wheel_rotation_speed_front_left"]
+treated_df["Front-Right Wheel Rotation"] = df["wheel_rotation_speed_front_right"]
+treated_df["Rear-Left Wheel Rotation"] = df["wheel_rotation_speed_rear_left"]
+treated_df["Rear-Right Wheel Rotation"] = df["wheel_rotation_speed_rear_right"]
 
 # Write final CSV
 treated_df.to_csv("./data/treated-datasheet.csv", decimal=",", sep=";")
