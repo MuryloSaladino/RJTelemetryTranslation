@@ -18,10 +18,6 @@ treated_df["Position X"] = (df["position_x"] * math.cos(theta)) - (df["position_
 treated_df["Position Y"] = (df["position_x"] * math.sin(theta)) + (df["position_z"] * math.cos(theta))
 treated_df["Position Z"] = df["position_y"]
 
-# treated_df["Position X"] = df["position_x"]
-# treated_df["Position Y"] = df["position_z"]
-# treated_df["Position Z"] = df["position_y"]
-
 # Add speed in Km/h
 treated_df["Speed(Km/h)"] = df["speed"] * 3.6
 
@@ -32,18 +28,15 @@ treated_df["Fuel"] = df["fuel"]
 df["last_lap"] = df["lap_number"].shift(1)
 df["new_lap"] = df["lap_number"] != df["last_lap"]
 
-initial_fuel = 0.0
-df["lap_wasted_fuel"] = 0.0
-
-for i, row in df.iterrows():
-    if row["new_lap"]:
-        initial_fuel = row["fuel"]
-    df.at[i, "lap_wasted_fuel"] = initial_fuel - row["fuel"]
-
-treated_df["Wasted Fuel per Lap"] = df["lap_wasted_fuel"]
-
 # Add the lap number starting in 0
 treated_df["Lap"] = df["lap_number"]
+
+# Add wasted fuel per lap
+df["lap_initial_fuel"] = df.groupby("lap_number")["fuel"].transform("first")
+treated_df["Wasted Fuel per Lap"] = df["lap_initial_fuel"] - treated_df["Fuel"]
+
+# Add lap wasted fuel
+treated_df["Lap Wasted Fuel"] = treated_df.groupby("Lap")["Wasted Fuel per Lap"].transform("last")
 
 # Add the last lap time
 treated_df["Last lap time"] = df["last_lap_time"]
@@ -81,10 +74,6 @@ treated_df["Changed Gear"] = df["gear"] != df["previous_gear"]
 
 # Add the steer from -127(left) to 127(right)
 treated_df["Steering Wheel Movement"] = df["steer"]
-
-# Add car acceleration in m/s²
-# df["previous_speed"] = df["speed"].shift(1)
-# treated_df["Acceleration(m/s²)"] = (df["speed"] - df["previous_speed"]) / (df["since_last_ns"] / (10**9))
 
 # Add time in minutes
 treated_df["Time in minutes"] = treated_df["Timestamp(ms)"] / 60000
