@@ -119,19 +119,19 @@ choices = ["Brake", "Gas"]
 treated_df["Pedal State"] = np.select(conditions, choices, default='None')
 
 # Add Wheel Rotation
-treated_df["Front-Left Wheel Rotation"] = df["wheel_rotation_speed_front_left"]
-treated_df["Front-Right Wheel Rotation"] = df["wheel_rotation_speed_front_right"]
-treated_df["Rear-Left Wheel Rotation"] = df["wheel_rotation_speed_rear_left"]
-treated_df["Rear-Right Wheel Rotation"] = df["wheel_rotation_speed_rear_right"]
+treated_df["Rotation Front-Left Wheel"] = df["wheel_rotation_speed_front_left"]
+treated_df["Rotation Front-Right Wheel"] = df["wheel_rotation_speed_front_right"]
+treated_df["Rotation Rear-Left Wheel"] = df["wheel_rotation_speed_rear_left"]
+treated_df["Rotation Rear-Right Wheel"] = df["wheel_rotation_speed_rear_right"]
 
 # Add Tire Temperature
 def fahrenheit_to_kelvin(f):
     return 273.5 + ((f - 32.0) * (5.0/9.0)) 
 
-treated_df["Front-Left Tire Temperature"] = fahrenheit_to_kelvin(df["tire_temp_front_left"])
-treated_df["Front-Right Tire Temperature"] = fahrenheit_to_kelvin(df["tire_temp_front_right"])
-treated_df["Rear-Left Tire Temperature"] = fahrenheit_to_kelvin(df["tire_temp_rear_left"])
-treated_df["Rear-Right Tire Temperature"] = fahrenheit_to_kelvin(df["tire_temp_rear_right"])
+treated_df["Temperature Front-Left Tire"] = fahrenheit_to_kelvin(df["tire_temp_front_left"])
+treated_df["Temperature Front-Right Tire"] = fahrenheit_to_kelvin(df["tire_temp_front_right"])
+treated_df["Temperature Rear-Left Tire"] = fahrenheit_to_kelvin(df["tire_temp_rear_left"])
+treated_df["Temperature Rear-Right Tire"] = fahrenheit_to_kelvin(df["tire_temp_rear_right"])
 
 # Write final CSV
 treated_df.to_csv("./data/treated-datasheet.csv", decimal=",", sep=";")
