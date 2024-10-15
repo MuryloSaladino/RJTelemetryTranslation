@@ -5,6 +5,8 @@ import math
 treated_df = pd.DataFrame()
 df = pd.read_csv("./data/telemetry-rio-5-laps.csv")
 
+df = df.loc[df["distance_traveled"] > 0].reset_index()
+
 # Add timestamp in milliseconds
 treated_df["Timestamp(ms)"] = df["timestamp_ms"] - df["timestamp_ms"].iloc[0]
 
@@ -134,6 +136,40 @@ treated_df["Tire Temperature Rear-Left"] = fahrenheit_to_celsius(df["tire_temp_r
 treated_df["Tire Temperature Rear-Right"] = fahrenheit_to_celsius(df["tire_temp_rear_right"])
 
 treated_df["Tire Temperature"] = (treated_df["Tire Temperature Front-Left"] + treated_df["Tire Temperature Front-Right"] + treated_df["Tire Temperature Rear-Left"] + treated_df["Tire Temperature Rear-Right"]) / 4
+
+# Add Race Section
+df["lap_distance_traveled"] = df.groupby("lap_number")["distance_traveled"].transform("first")
+df["lap_distance_traveled"] = treated_df["Distance Traveled"] - df["lap_distance_traveled"]
+
+conditions = [
+    df["lap_distance_traveled"] <= 450,
+    df["lap_distance_traveled"] <= 950,
+    df["lap_distance_traveled"] <= 1150,
+    df["lap_distance_traveled"] <= 1700,
+    df["lap_distance_traveled"] <= 2250,
+    df["lap_distance_traveled"] <= 3000,
+    df["lap_distance_traveled"] <= 3600,
+    df["lap_distance_traveled"] <= 4100,
+    df["lap_distance_traveled"] <= 4400,
+    df["lap_distance_traveled"] <= 4600,
+    df["lap_distance_traveled"] <= 5250,
+    df["lap_distance_traveled"] <= 5550,
+]
+choices = [
+    "1. Start",
+    "2. Long Curve 1",
+    "3. Right Angle Curve",
+    "4. Straightaway 1",
+    "5. C Curve",
+    "6. Nose Curve",
+    "7. Reflect Curve",
+    "8. Superman Curve",
+    "9. Superman Straightaway",
+    "10. Pre-Longway Curve",
+    "11. Longway",
+    "12. Tip of the Iceberg"
+]
+treated_df["Race Section"] = np.select(conditions, choices, default='Final Curve')
 
 # Add yaw, pitch and roll
 treated_df["Yaw"] = np.degrees(df["yaw"])
