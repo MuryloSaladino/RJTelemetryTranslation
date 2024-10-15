@@ -137,7 +137,38 @@ treated_df["Tire Temperature Rear-Right"] = fahrenheit_to_kelvin(df["tire_temp_r
 
 # Add Race Section
 df["lap_distance_traveled"] = df.groupby("lap_number")["distance_traveled"].transform("first")
-treated_df["Race Section"] = (treated_df["Distance Traveled"] - df["lap_distance_traveled"]) // 500
+df["lap_distance_traveled"] = treated_df["Distance Traveled"] - df["lap_distance_traveled"]
+
+conditions = [
+    df["lap_distance_traveled"] <= 450,
+    df["lap_distance_traveled"] <= 950,
+    df["lap_distance_traveled"] <= 1150,
+    df["lap_distance_traveled"] <= 1700,
+    df["lap_distance_traveled"] <= 2250,
+    df["lap_distance_traveled"] <= 3000,
+    df["lap_distance_traveled"] <= 3600,
+    df["lap_distance_traveled"] <= 4100,
+    df["lap_distance_traveled"] <= 4400,
+    df["lap_distance_traveled"] <= 4600,
+    df["lap_distance_traveled"] <= 5250,
+    df["lap_distance_traveled"] <= 5550,
+]
+choices = [
+    "1. Start",
+    "2. Long Curve 1",
+    "3. Right Angle Curve",
+    "4. Straightaway 1",
+    "5. C Curve",
+    "6. Nose Curve",
+    "7. Reflect Curve",
+    "8. Superman Curve",
+    "9. Superman Straightaway",
+    "10. Pre-Longway Curve",
+    "11. Longway",
+    "12. Tip of the Iceberg"
+]
+treated_df["Race Section"] = np.select(conditions, choices, default='Final Curve')
+
 
 # Add Car Strengh Vectors
 treated_df["Yaw"] = df["yaw"]
