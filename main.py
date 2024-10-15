@@ -22,8 +22,8 @@ treated_df["Position X"] = df["position_x"]
 treated_df["Position Y"] = df["position_z"]
 treated_df["Position Z"] = df["position_y"]
 
-# Add speed in Km/h
-treated_df["Speed(Km/h)"] = df["speed"] * 3.6
+# Add speed in km/h
+treated_df["Speed(km/h)"] = df["speed"] * 3.6
 
 # Add percentage of fuel left in the tank 
 treated_df["Fuel"] = df["fuel"]
@@ -86,19 +86,19 @@ treated_df["Time in minutes"] = treated_df["Timestamp(ms)"] / 60000
 conditions = [
     treated_df["Ran over strip"],
     treated_df["Changed Gear"],
-    treated_df["Speed(Km/h)"] >= 200,
-    (treated_df["Speed(Km/h)"] >= 100) & (treated_df["Speed(Km/h)"] < 200),
+    treated_df["Speed(km/h)"] >= 200,
+    (treated_df["Speed(km/h)"] >= 100) & (treated_df["Speed(km/h)"] < 200),
 ]
 choices = [
     "Running over rumble strips",
     "Changing gear",
-    "> 200 Km/h",
-    "> 100 Km/h",
+    "> 200 km/h",
+    "> 100 km/h",
 ]
-treated_df['Car Condition'] = np.select(conditions, choices, default='< 100 Km/h')
+treated_df['Car Condition'] = np.select(conditions, choices, default='< 100 km/h')
 
 # Add Speed Range
-treated_df["Speed Range"] = (treated_df["Speed(Km/h)"] // 40) * 40
+treated_df["Speed Range"] = (treated_df["Speed(km/h)"] // 40) * 40
 
 # Add car acceleration in m/s² V2
 treated_df['Race Time(s)'] = df['current_race_time'].apply(lambda x: int(x))
@@ -132,6 +132,10 @@ treated_df["Tire Temperature Front-Left"] = fahrenheit_to_kelvin(df["tire_temp_f
 treated_df["Tire Temperature Front-Right"] = fahrenheit_to_kelvin(df["tire_temp_front_right"])
 treated_df["Tire Temperature Rear-Left"] = fahrenheit_to_kelvin(df["tire_temp_rear_left"])
 treated_df["Tire Temperature Rear-Right"] = fahrenheit_to_kelvin(df["tire_temp_rear_right"])
+
+treated_df["Yaw"] = df["yaw"]
+treated_df["Pitch"] = df["pitch"]
+treated_df["Roll"] = df["roll"]
 
 # Write final CSV
 treated_df.to_csv("./data/treated-datasheet.csv", decimal=",", sep=";")
