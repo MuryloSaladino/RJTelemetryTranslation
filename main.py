@@ -125,17 +125,20 @@ treated_df["Wheel Rotation Rear-Left"] = df["wheel_rotation_speed_rear_left"]
 treated_df["Wheel Rotation Rear-Right"] = df["wheel_rotation_speed_rear_right"]
 
 # Add Tire Temperature
-def fahrenheit_to_kelvin(f):
-    return 273.5 + ((f - 32.0) * (5.0/9.0)) 
+def fahrenheit_to_celsius(f):
+    return (f - 32.0) * (5.0/9.0)
 
-treated_df["Tire Temperature Front-Left"] = fahrenheit_to_kelvin(df["tire_temp_front_left"])
-treated_df["Tire Temperature Front-Right"] = fahrenheit_to_kelvin(df["tire_temp_front_right"])
-treated_df["Tire Temperature Rear-Left"] = fahrenheit_to_kelvin(df["tire_temp_rear_left"])
-treated_df["Tire Temperature Rear-Right"] = fahrenheit_to_kelvin(df["tire_temp_rear_right"])
+treated_df["Tire Temperature Front-Left"] = fahrenheit_to_celsius(df["tire_temp_front_left"])
+treated_df["Tire Temperature Front-Right"] = fahrenheit_to_celsius(df["tire_temp_front_right"])
+treated_df["Tire Temperature Rear-Left"] = fahrenheit_to_celsius(df["tire_temp_rear_left"])
+treated_df["Tire Temperature Rear-Right"] = fahrenheit_to_celsius(df["tire_temp_rear_right"])
 
-treated_df["Yaw"] = df["yaw"]
-treated_df["Pitch"] = df["pitch"]
-treated_df["Roll"] = df["roll"]
+treated_df["Tire Temperature"] = (treated_df["Tire Temperature Front-Left"] + treated_df["Tire Temperature Front-Right"] + treated_df["Tire Temperature Rear-Left"] + treated_df["Tire Temperature Rear-Right"]) / 4
+
+# Add yaw, pitch and roll
+treated_df["Yaw"] = np.degrees(df["yaw"])
+treated_df["Pitch"] = np.degrees(df["pitch"])
+treated_df["Roll"] = np.degrees(df["roll"])
 
 # Write final CSV
 treated_df.to_csv("./data/treated-datasheet.csv", decimal=",", sep=";")
