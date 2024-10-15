@@ -5,6 +5,8 @@ import math
 treated_df = pd.DataFrame()
 df = pd.read_csv("./data/telemetry-rio-5-laps.csv")
 
+df = df.loc[df["distance_traveled"] > 0].reset_index()
+
 # Add timestamp in milliseconds
 treated_df["Timestamp(ms)"] = df["timestamp_ms"] - df["timestamp_ms"].iloc[0]
 
@@ -132,6 +134,11 @@ treated_df["Tire Temperature Front-Left"] = fahrenheit_to_kelvin(df["tire_temp_f
 treated_df["Tire Temperature Front-Right"] = fahrenheit_to_kelvin(df["tire_temp_front_right"])
 treated_df["Tire Temperature Rear-Left"] = fahrenheit_to_kelvin(df["tire_temp_rear_left"])
 treated_df["Tire Temperature Rear-Right"] = fahrenheit_to_kelvin(df["tire_temp_rear_right"])
+
+# Add Race Section
+df["lap_distance_traveled"] = df.groupby("lap_number")["distance_traveled"].transform("first")
+treated_df["Race Section"] = (treated_df["Distance Traveled"] - df["lap_distance_traveled"]) // 500
+
 
 # Write final CSV
 treated_df.to_csv("./data/treated-datasheet.csv", decimal=",", sep=";")
