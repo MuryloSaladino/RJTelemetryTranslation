@@ -156,20 +156,20 @@ conditions = [
     df["lap_distance_traveled"] <= 5550,
 ]
 choices = [
-    "1. Start",
-    "2. Long Curve 1",
-    "3. Right Angle Curve",
-    "4. Straightaway 1",
-    "5. C Curve",
-    "6. Nose Curve",
-    "7. Reflect Curve",
-    "8. Superman Curve",
-    "9. Superman Straightaway",
-    "10. Pre-Longway Curve",
-    "11. Longway",
-    "12. Tip of the Iceberg"
+    "A. Start",
+    "B. Long Curve 1",
+    "C. Right Angle Curve",
+    "D. Straightaway 1",
+    "F. C Curve",
+    "G. Nose Curve",
+    "H. Reflect Curve",
+    "I. Superman Curve",
+    "J. Superman Straightaway",
+    "K. Pre-Longway Curve",
+    "L. Longway",
+    "M. Tip of the Iceberg"
 ]
-treated_df["Race Section"] = np.select(conditions, choices, default='Final Curve')
+treated_df["Race Section"] = np.select(conditions, choices, default='N. Final Curve')
 
 # Add yaw, pitch and roll
 treated_df["Yaw"] = np.degrees(df["yaw"])
